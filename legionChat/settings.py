@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-)#11aayg_^0cj=e(eriy6wn!j29ydsnw7s9t3a=9le1m$phewy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['legionchat-0eed07760ccd.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -75,11 +75,21 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [os.environ.get('REDIS_URL','redis://localhost:6379')],
         },
     },
 }
 
+# cache
+CACHE = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": [os.environ.get('REDIS_URL','redis://localhost:6379')],
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
