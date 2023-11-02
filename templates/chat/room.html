@@ -1,0 +1,100 @@
+{% extends "chat/chat.html" %}
+{% block content %}
+      <section class="chat">
+        <div class="header-chat">
+          <i class="icon fa fa-user-o" aria-hidden="true"></i>
+          <p class="name">{{ room.name }}</p>
+          <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
+        </div>
+        <div class="messages-chat" id="chat-messages">
+          {% for message in messages %}
+            {% if message.user == user %}
+            <div class="message text-only" style="font-size:10pt;">
+              <div class="response">
+                <p class="response-time time">{{ message.user.username }}</p>
+                <p class="text">{{ message.content }}</p>
+                <p class="response-time time">{{ message.timestamp }}</p>
+              </div>
+            </div>
+            {% else %}
+            <div class="message">
+            <p class="time">{{ message.user.username }}</p>
+              <p class="text">{{ message.content }}</p>
+            </div>
+              <p class="time">{{ message.timestamp }}</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="footer-chat">
+          <i class="icon fa fa-smile-o clickable" style="font-size:15pt;" aria-hidden="true"></i>
+          <input type="text" class="write-message" id="chat-message-input" placeholder="Type your message here" />
+          <i class="e" id="chat-message-submit" aria-hidden="true"></i>
+        </div>
+      </section>
+    {{ room.slug|json_script:"room-name" }}
+    {{ request.user.username|json_script:"user-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const userName = JSON.parse(document.getElementById('user-name').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function (e) {
+          console.log('onmessage')
+
+          const data = JSON.parse(e.data);
+
+          if (data.message) {
+            let html = '<div class="message text-only">';
+                html += '<div class="response">';
+                html += '<p class="response-time time">' + data.username + '</p>';
+                html += '<p class="text" style="font-size:10pt;">' + data.message + '</p>';
+                html += '<p class="response-time time">{{ time }}</p></div></div>';
+            document.querySelector("#chat-messages").innerHTML += html;
+
+            scrollToBottom();
+          } else {
+            alert('The message was empty!');
+          }
+        };
+        
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            e.preventDefault();
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'username': userName,
+                'room': roomName
+            }));
+            messageInputDom.value = '';
+
+            return false;
+        };
+
+        function scrollToBottom() {
+          const objDiv = document.querySelector('#chat-messages');
+          objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
+        scrollToBottom();
+    </script>
+{% endblock content %}

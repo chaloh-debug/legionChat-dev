@@ -1,0 +1,12 @@
+#.env
+
+# Text backup files
+*.bak
+
+# Database
+#*.sqlite3
+
+# pycache
+**/__pychache__/
+__pycache__/
+*.pyc

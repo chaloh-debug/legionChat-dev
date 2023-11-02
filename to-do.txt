@@ -1,0 +1,8 @@
+# create a homepage
+# save chats and rooms
+# Display all rooms
+# Display all messages
+# Messages scrolling enable
+# Limit Display to window size.
+
+# Restructure pages

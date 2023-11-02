@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+    <link rel="stylesheet" href="{% static 'assets/css/friendspage.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+    <!-- side nav bar -->
+    <div class="sidebar">
+        <div  class="logo"></div>
+        <ul class="menu">
+          <li class="active">
+            <a href="{% url 'chat' %}">
+              <i class="fas fa-comments"></i>
+              <span>chats</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'profile1' %}">
+              <i class="fas fa-user"></i>
+              <span>Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'friends' %}">
+              <i class="fas fa-user-friends"></i>
+              <span>Friends</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'requests' %}">
+              <i class="fas fa-user-plus"></i>
+              <span>Requests</span>
+            </a>
+          </li>
+          <li class="logout">
+            {% if user.is_authenticated %}
+            <a href="{% url 'account_logout' %}">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+            {% else %}
+            <a href="{% url 'account_signup' %}">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Login</span>
+            </a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    <div class="main--content">
+        <div class="header--wrapper">
+            <div class="header--title">
+                <h2>LegionChat</h2>
+            </div>
+            <div class="user--info">
+              <form class="search--box justify-content-start" onsubmit="return executeQuery();">
+                <i class="fa fa-search"></i>
+                <input type="text" class="form-control" name="q" id="search_field" placeholder="Search...">
+              </form>
+            </div>
+        </div>
+        {% block content %}
+        <section class="discussions">
+          {% if friend_requests %}
+          {% for request in friend_requests  %}
+           <div class="discussion message-active">
+              <img class="rounded-circle account-img" src="{{ user.avatar.url }} " />
+              <a class="name" href="{% url 'account' request.sender.id %}" >{{ request.sender.username }}</a> 
+          </div>
+          {% endfor %}
+          {% endif%}
+      </section>
+    {% endblock content %}
+    </div>
+    <script>
+      function executeQuery() {
+        var query = document.getElementById("search_field").value;
+        window.location.replace("{% url 'search' %}?q=" + query)
+        return false
+      }
+    </script>
+</body>
+</html>

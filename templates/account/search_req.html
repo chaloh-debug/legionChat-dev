@@ -1,0 +1,11 @@
+{% extends "friends/friends.html" %}
+{% block content %}
+<section class="discussions">
+    {% for user in accounts %}
+     <div class="discussion message-active">
+        <img class="rounded-circle account-img" src="{{ user.avatar.url }} " />
+        <a class="name" href="{% url 'account' user.id %}" >{{ user }}</a> 
+    </div>
+    {% endfor %}
+</section>
+{% endblock content %}
