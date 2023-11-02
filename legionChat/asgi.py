@@ -1,4 +1,3 @@
-# mysite/asgi.py
 import os
 
 from channels.auth import AuthMiddlewareStack
@@ -17,7 +16,7 @@ from chat.routing import websocket_urlpatterns
 
 application = ProtocolTypeRouter(
     {
-        "https": django_asgi_app,
+        "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
             AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
         ),
