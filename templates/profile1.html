@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 {% block title %}Profile Page{% endblock title %}
+<div class="card" style="background-color:lightgrey;max-width:700px;">
     <div class="row my-3 p-3">
         <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }} " style="cursor: pointer;"/>
     </div>
@@ -42,4 +43,5 @@
             <button type="reset" class="btn btn-dark btn-lg">Reset</button>
         </form>
     </div>
+</div>
 {% endblock content %}
