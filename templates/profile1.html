@@ -1,7 +1,6 @@
 {% extends 'friends/friends.html' %}
 {% load static %}
 {% block content %}
-{% block title %}Profile Page{% endblock title %}
 <div class="card" style="background-color:lightgrey;max-width:500px;text-align:center;">
     <div class="row my-3 p-3">
         <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }} " style="cursor: pointer;"/>
